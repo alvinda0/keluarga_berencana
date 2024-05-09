@@ -27,13 +27,7 @@ class ChooseKBPage extends StatelessWidget {
               _showOptionsDialog(context, 'IUD (Alat Kontrasepsi Dalam Rahim)');
             },
           ),
-          Divider(),
-          ListTile(
-            title: Text('Kondom'),
-            onTap: () {
-              _showOptionsDialog(context, 'Kondom');
-            },
-          ),
+
           Divider(),
           ListTile(
             title: Text('Implan KB'),
@@ -55,24 +49,138 @@ class ChooseKBPage extends StatelessWidget {
           title: Text('Pilihan untuk $selectedKB'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text('Atur Pengingat'),
-                onTap: () {
-                  // Action when reminder option is selected
-                  Navigator.pop(context); // Close the dialog
-                  // Navigate to reminder page or perform action
-                },
-              ),
-              ListTile(
-                title: Text('Informasi Lebih Lanjut'),
-                onTap: () {
-                  // Action when more info option is selected
-                  Navigator.pop(context); // Close the dialog
-                  // Navigate to more info page or perform action
-                },
-              ),
-            ],
+            children: selectedKB == 'Suntik KB'
+                ? [
+                    ListTile(
+                      title: Text('Sedang Menyusui'),
+                      onTap: () {
+                        // Show date picker popup
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2025),
+                          builder: (BuildContext context, Widget? child) {
+                            return Theme(
+                              data: ThemeData
+                                  .light(), // Change if you want a different theme
+                              child: child!,
+                            );
+                          },
+                        ).then((selectedDate) {
+                          // Do something with the selected date
+                          if (selectedDate != null) {
+                            print('Selected date: $selectedDate');
+                            // You can navigate to another page here passing the selected date if needed
+                          }
+                        });
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Tidak Sedang Menyusui'),
+                      onTap: () {
+                        // Show date picker popup
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2025),
+                          builder: (BuildContext context, Widget? child) {
+                            return Theme(
+                              data: ThemeData
+                                  .light(), // Change if you want a different theme
+                              child: child!,
+                            );
+                          },
+                        ).then((selectedDate) {
+                          // Do something with the selected date
+                          if (selectedDate != null) {
+                            print('Selected date: $selectedDate');
+                            // You can navigate to another page here passing the selected date if needed
+                          }
+                        });
+                      },
+                    ),
+                  ]
+                : selectedKB == 'Implan KB'
+                    ? [
+                        ListTile(
+                          title: Text('Norplant: 1 batang = 5 tahun'),
+                          onTap: () {
+                            // Show date picker popup
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2025),
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData
+                                      .light(), // Change if you want a different theme
+                                  child: child!,
+                                );
+                              },
+                            ).then((selectedDate) {
+                              // Do something with the selected date
+                              if (selectedDate != null) {
+                                print('Selected date: $selectedDate');
+                                // You can navigate to another page here passing the selected date if needed
+                              }
+                            });
+                          },
+                        ),
+                        ListTile(
+                          title: Text('Implanon: 2 batang = 3 tahun'),
+                          onTap: () {
+                            // Show date picker popup
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2025),
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData
+                                      .light(), // Change if you want a different theme
+                                  child: child!,
+                                );
+                              },
+                            ).then((selectedDate) {
+                              // Do something with the selected date
+                              if (selectedDate != null) {
+                                print('Selected date: $selectedDate');
+                                // You can navigate to another page here passing the selected date if needed
+                              }
+                            });
+                          },
+                        ),
+                        ListTile(
+                          title: Text('Indoplant: 3 batang = 3 tahun'),
+                          onTap: () {
+                            // Show date picker popup
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2025),
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData
+                                      .light(), // Change if you want a different theme
+                                  child: child!,
+                                );
+                              },
+                            ).then((selectedDate) {
+                              // Do something with the selected date
+                              if (selectedDate != null) {
+                                print('Selected date: $selectedDate');
+                                // You can navigate to another page here passing the selected date if needed
+                              }
+                            });
+                          },
+                        ),
+                      ]
+                    : [],
           ),
         );
       },

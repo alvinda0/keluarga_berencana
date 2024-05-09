@@ -5,49 +5,38 @@ abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
 
-class RegisterLoading
-    extends AuthState {} // State untuk menampilkan loading saat melakukan registrasi
+class RegisterLoading extends AuthState {}
 
-class RegisterSuccess
-    extends AuthState {} // State untuk menampilkan keberhasilan registrasi
+class RegisterSuccess extends AuthState {}
 
-class RegisterFailure
-    extends AuthState {} // State untuk menampilkan kegagalan registrasi
+class RegisterFailure extends AuthState {}
 
-class LoginLoading
-    extends AuthState {} // State untuk menampilkan loading saat melakukan login
+class LoginLoading extends AuthState {}
 
 class LoginSuccess extends AuthState {
   final String userId;
+  final String email;
+  final String username;
+  final String placeOfBirth;
+  final String fullName;
+  final String address;
+  final String phoneNumber;
 
   LoginSuccess({
     required this.userId,
-    required String email,
-    required String username,
-    required String placeOfBirth,
-    required String fullName,
-    required String address,
-    required String phoneNumber,
+    required this.email,
+    required this.username,
+    required this.placeOfBirth,
+    required this.fullName,
+    required this.address,
+    required this.phoneNumber,
   });
-} // State untuk menampilkan keberhasilan login
+}
 
-class LoginFailure
-    extends AuthState {} // State untuk menampilkan kegagalan login
+class LoginFailure extends AuthState {}
 
-class UpdateProfileLoading
-    extends AuthState {} // State untuk menampilkan loading saat memperbarui profil
+class UpdateProfileLoading extends AuthState {}
 
-class UpdateProfileSuccess
-    extends AuthState {} // State untuk menampilkan keberhasilan pembaruan profil
+class UpdateProfileSuccess extends AuthState {}
 
-class UpdateProfileFailure
-    extends AuthState {} // State untuk menampilkan kegagalan pembaruan profil
-
-class DeleteAccountLoading
-    extends AuthState {} // State untuk menampilkan loading saat menghapus akun
-
-class DeleteAccountSuccess
-    extends AuthState {} // State untuk menampilkan keberhasilan penghapusan akun
-
-class DeleteAccountFailure
-    extends AuthState {} // State untuk menampilkan kegagalan penghapusan akun
+class UpdateProfileFailure extends AuthState {}

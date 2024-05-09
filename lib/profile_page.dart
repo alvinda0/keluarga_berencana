@@ -1,120 +1,141 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keluarga_berencana/Auth/auth_bloc.dart';
 
+import 'Auth/user.dart';
+
 class ProfilePage extends StatefulWidget {
-  final String userId;
-  final String username;
-  final String email;
-  final String fullName;
-  final String placeOfBirth;
-  final String address;
-  final String phoneNumber;
-
-  ProfilePage({
-    required this.userId,
-    required this.username,
-    required this.email,
-    required this.fullName,
-    required this.placeOfBirth,
-    required this.address,
-    required this.phoneNumber,
-  });
-
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late TextEditingController fullNameController;
-  late TextEditingController placeOfBirthController;
-  late TextEditingController addressController;
-  late TextEditingController phoneNumberController;
+  final _userListController = StreamController<List<User>>();
+  late Stream<List<User>> _userListStream;
 
-  late AuthBloc authBloc; // Deklarasi blok otentikasi
+  final UserApi _userApi = UserApi();
 
   @override
   void initState() {
     super.initState();
-    fullNameController = TextEditingController(text: widget.fullName);
-    placeOfBirthController = TextEditingController(text: widget.placeOfBirth);
-    addressController = TextEditingController(text: widget.address);
-    phoneNumberController = TextEditingController(text: widget.phoneNumber);
-
-    authBloc =
-        BlocProvider.of<AuthBloc>(context); // Inisialisasi blok otentikasi
+    _userListStream = _userListController.stream;
+    fetchUserList();
   }
 
-  @override
-  void dispose() {
-    fullNameController.dispose();
-    placeOfBirthController.dispose();
-    addressController.dispose();
-    phoneNumberController.dispose();
-    super.dispose();
-  }
-
-  void _updateProfile() {
-    String fullName = fullNameController.text;
-    String placeOfBirth = placeOfBirthController.text;
-    String address = addressController.text;
-    String phoneNumber = phoneNumberController.text;
-
-    // Panggil blok otentikasi untuk mengirim pembaruan profil ke backend
-    authBloc.add(UpdateProfileEvent(
-      userId: widget.userId,
-      newFullName: fullName,
-      newPlaceOfBirth: placeOfBirth,
-      newAddress: address,
-      newPhoneNumber: phoneNumber,
-      newUsername: '',
-    ));
+  Future<void> fetchUserList() async {
+    try {
+      final userList = await _userApi.fetchUserList();
+      _userListController.sink.add(userList);
+    } catch (e) {
+      setState(() {
+        _userListStream = Stream.error(e);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: fullNameController,
-                  decoration: InputDecoration(labelText: 'Full Name'),
-                ),
-                TextFormField(
-                  controller: placeOfBirthController,
-                  decoration: InputDecoration(labelText: 'Place of Birth'),
-                ),
-                TextFormField(
-                  controller: addressController,
-                  decoration: InputDecoration(labelText: 'Address'),
-                ),
-                TextFormField(
-                  controller: phoneNumberController,
-                  decoration: InputDecoration(labelText: 'Phone Number'),
-                ),
-                SizedBox(height: 16.0),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _updateProfile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+      body: StreamBuilder<List<User>>(
+        stream: _userListStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final user = snapshot.data![index];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                        ),
+                        controller: TextEditingController(text: user.email),
+                      ),
                     ),
-                    child: Text(
-                      'Update',
-                      style: TextStyle(color: Colors.white),
+                    SizedBox(height: 16.0), // Spasi antar input
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Nama Lengkap',
+                        ),
+                        controller:
+                            TextEditingController(text: user.namalengkap),
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+                    SizedBox(height: 16.0), // Spasi antar input
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Tempat Lahir',
+                        ),
+                        controller:
+                            TextEditingController(text: user.tempatlahir),
+                      ),
+                    ),
+                    SizedBox(height: 16.0), // Spasi antar input
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Alamat',
+                        ),
+                        controller: TextEditingController(text: user.alamat),
+                      ),
+                    ),
+                    SizedBox(height: 16.0), // Spasi antar input
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Nomor Telepon',
+                        ),
+                        controller: TextEditingController(text: user.nomer),
+                      ),
+                    ),
+                    SizedBox(height: 16.0), // Spasi antar input
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Add your button's onPressed logic here
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Colors.green, // Background color of button
+                        ),
+                        child: Text(
+                          'Simpan',
+                          style: TextStyle(
+                              color: Colors.white), // Text color of button
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('${snapshot.error}'),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _userListController.close();
+    super.dispose();
   }
 }

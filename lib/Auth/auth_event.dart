@@ -42,7 +42,7 @@ class UpdateProfileEvent extends AuthEvent {
 
   UpdateProfileEvent({
     required this.userId,
-    required this.newUsername, // Menambahkan this.newUsername
+    required this.newUsername,
     required this.newFullName,
     required this.newPlaceOfBirth,
     required this.newAddress,

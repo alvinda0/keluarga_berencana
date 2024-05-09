@@ -1,8 +1,11 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:keluarga_berencana/Auth/auth_state.dart';
-import 'package:meta/meta.dart';
+
+import 'package:bloc/bloc.dart';
+import 'package:keluarga_berencana/Auth/user.dart';
+import 'auth_state.dart';
 
 part 'auth_event.dart';
 
@@ -75,6 +78,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield UpdateProfileSuccess();
     } else {
       yield UpdateProfileFailure();
+    }
+  }
+}
+
+class UserApi {
+  Future<List<User>> fetchUserList() async {
+    try {
+      final response =
+          await http.get(Uri.parse('http://192.168.43.34/kb/crud_users.php'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        final List<User> userList =
+            data.map((json) => User.fromJson(json)).toList();
+        return userList;
+      } else {
+        throw Exception('Failed to load user list');
+      }
+    } catch (e) {
+      throw Exception('Failed to load user list');
     }
   }
 }
