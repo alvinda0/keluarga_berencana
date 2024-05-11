@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:bloc/bloc.dart';
 import 'package:keluarga_berencana/Auth/user.dart';
+import 'package:keluarga_berencana/reminders.dart';
 import 'auth_state.dart';
 
 part 'auth_event.dart';
@@ -67,7 +68,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _mapUpdateProfileEventToState(
       UpdateProfileEvent event) async* {
-    String url = 'http://192.168.43.34/kb/crud_users.php';
+    String url = 'http://192.168.43.34/kb/users/read_users.php';
     var response = await http.post(Uri.parse(url), body: {
       'id': event.userId, // Mengirim ID pengguna untuk diupdate
       'new_username': event.newUsername, // Informasi profil baru
@@ -85,8 +86,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 class UserApi {
   Future<List<User>> fetchUserList() async {
     try {
-      final response =
-          await http.get(Uri.parse('http://192.168.43.34/kb/crud_users.php'));
+      final response = await http
+          .get(Uri.parse('http://192.168.43.34/kb/users/read_users.php'));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         final List<User> userList =
@@ -97,6 +98,61 @@ class UserApi {
       }
     } catch (e) {
       throw Exception('Failed to load user list');
+    }
+  }
+}
+
+class RemindersApi {
+  static Future<List<Reminders>> fetchReminders() async {
+    final url =
+        Uri.parse('http://192.168.43.34/kb/reminders/get_reminders.php');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return parseReminders(response.body);
+    } else {
+      throw Exception('Failed to load reminders');
+    }
+  }
+
+  static List<Reminders> parseReminders(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Reminders>((json) => Reminders.fromJson(json)).toList();
+  }
+
+  static Future<void> editReminder(
+      String reminderID,
+      String updatedReminderType,
+      DateTime updatedReminderTime,
+      String updatedStatus) async {
+    final url =
+        Uri.parse('http://192.168.43.34/kb/reminders/update_reminder.php');
+    try {
+      final response = await http.put(
+        url,
+        body: {
+          'reminderID': reminderID,
+          'reminderType': updatedReminderType,
+          'reminderTime': updatedReminderTime.toString(),
+          'status': updatedStatus,
+        },
+      );
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update reminder: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Failed to update reminder: $e');
+    }
+  }
+
+  static Future<void> deleteReminder(String reminderID) async {
+    final url =
+        Uri.parse('http://192.168.43.34/kb/reminders/delete_reminder.php');
+    final response = await http.post(
+      url,
+      body: {'reminderID': reminderID},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete reminder');
     }
   }
 }
