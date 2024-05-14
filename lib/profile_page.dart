@@ -5,6 +5,9 @@ import 'package:keluarga_berencana/Auth/auth_bloc.dart';
 import 'Auth/user.dart';
 
 class ProfilePage extends StatefulWidget {
+  final String userId;
+
+  ProfilePage({required this.userId});
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }

@@ -21,7 +21,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _pages = [
     HomePage(),
-    ProfilePage(), // Mengirim userId ke ProfilePage
+    ProfilePage(
+      userId: '',
+    ), // Mengirim userId ke ProfilePage
     ChooseKBPage(),
     ReminderPage(),
   ];

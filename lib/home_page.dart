@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
+  late final String userId;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(

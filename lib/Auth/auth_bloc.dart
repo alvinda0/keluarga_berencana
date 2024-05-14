@@ -25,7 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _mapRegisterEventToState(RegisterEvent event) async* {
-    String url = 'http://192.168.43.34/kb/register.php';
+    String url = 'http://192.168.12.12/kb/register.php';
     var response = await http.post(Uri.parse(url), body: {
       'username': event.username,
       'email': event.email,
@@ -44,7 +44,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _mapLoginEventToState(LoginEvent event) async* {
-    String url = 'http://192.168.43.34/kb/login.php';
+    String url = 'http://192.168.12.12/kb/login.php';
     var response = await http.post(Uri.parse(url), body: {
       'username': event.username,
       'password': event.password,
@@ -68,7 +68,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _mapUpdateProfileEventToState(
       UpdateProfileEvent event) async* {
-    String url = 'http://192.168.43.34/kb/users/read_users.php';
+    String url = 'http://192.168.12.12/kb/users/read_users.php';
     var response = await http.post(Uri.parse(url), body: {
       'id': event.userId, // Mengirim ID pengguna untuk diupdate
       'new_username': event.newUsername, // Informasi profil baru
@@ -87,7 +87,7 @@ class UserApi {
   Future<List<User>> fetchUserList() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.43.34/kb/users/read_users.php'));
+          .get(Uri.parse('http://192.168.12.12/kb/users/read_users.php'));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         final List<User> userList =
@@ -105,7 +105,7 @@ class UserApi {
 class RemindersApi {
   static Future<List<Reminders>> fetchReminders() async {
     final url =
-        Uri.parse('http://192.168.43.34/kb/reminders/get_reminders.php');
+        Uri.parse('http://192.168.12.12/kb/reminders/get_reminders.php');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       return parseReminders(response.body);
@@ -125,7 +125,7 @@ class RemindersApi {
       DateTime updatedReminderTime,
       String updatedStatus) async {
     final url =
-        Uri.parse('http://192.168.43.34/kb/reminders/update_reminder.php');
+        Uri.parse('http://192.168.12.12/kb/reminders/update_reminder.php');
     try {
       final response = await http.put(
         url,
@@ -146,7 +146,7 @@ class RemindersApi {
 
   static Future<void> deleteReminder(String reminderID) async {
     final url =
-        Uri.parse('http://192.168.43.34/kb/reminders/delete_reminder.php');
+        Uri.parse('http://192.168.12.12/kb/reminders/delete_reminder.php');
     final response = await http.post(
       url,
       body: {'reminderID': reminderID},
